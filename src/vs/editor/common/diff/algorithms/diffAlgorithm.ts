@@ -87,13 +87,10 @@ export class DateTimeout implements ITimeout {
 
 	// Recommendation: Set a log-point `{this.disable()}` in the body
 	public isValid(): boolean {
-		const valid = Date.now() - this.startTime < this.timeout;
-		if (!valid && this.valid) {
-			this.valid = false; // timeout reached
-			// eslint-disable-next-line no-debugger
-			debugger; // WARNING: Most likely debugging caused the timeout. Call `this.disable()` to continue without timing out.
-		}
-		return this.valid;
+		const now = Date.now();
+		// eslint-disable-next-line no-debugger
+		// debugger; // WARNING, call `this.debuggerDisable()` to not get different results when debugging
+		return now - this.startTime < this.timeout;
 	}
 
 	public disable() {

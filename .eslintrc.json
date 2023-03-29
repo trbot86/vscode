@@ -263,6 +263,7 @@
 							"xterm",
 							"xterm-addon-canvas",
 							"xterm-addon-search",
+							"xterm-addon-image",
 							"xterm-addon-serialize",
 							"xterm-addon-unicode11",
 							"xterm-addon-webgl",

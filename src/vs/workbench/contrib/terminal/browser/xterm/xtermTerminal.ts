@@ -9,6 +9,7 @@ import type { ISearchOptions, SearchAddon as SearchAddonType } from 'xterm-addon
 import type { Unicode11Addon as Unicode11AddonType } from 'xterm-addon-unicode11';
 import type { WebglAddon as WebglAddonType } from 'xterm-addon-webgl';
 import type { SerializeAddon as SerializeAddonType } from 'xterm-addon-serialize';
+import { ImageAddon, IImageAddonOptions } from 'xterm-addon-image';
 import { IXtermCore } from 'vs/workbench/contrib/terminal/browser/xterm-private';
 import { ConfigurationTarget, IConfigurationService } from 'vs/platform/configuration/common/configuration';
 import { TerminalConfigHelper } from 'vs/workbench/contrib/terminal/browser/terminalConfigHelper';
@@ -35,6 +36,20 @@ import { Emitter } from 'vs/base/common/event';
 import { ITelemetryService } from 'vs/platform/telemetry/common/telemetry';
 import { SuggestAddon } from 'vs/workbench/contrib/terminal/browser/xterm/suggestAddon';
 import { IContextKey } from 'vs/platform/contextkey/common/contextkey';
+
+// customize as needed (showing addon defaults)
+const customSettings: IImageAddonOptions = {
+	enableSizeReports: true,    // whether to enable CSI t reports (see below)
+	pixelLimit: 16777216,       // max. pixel size of a single image
+	sixelSupport: true,         // enable sixel support
+	sixelScrolling: true,       // whether to scroll on image output
+	sixelPaletteLimit: 256,     // initial sixel palette size
+	sixelSizeLimit: 25000000,   // size limit of a single sixel sequence
+	storageLimit: 128,          // FIFO storage limit in MB
+	showPlaceholder: true,      // whether to show a placeholder for evicted images
+	iipSupport: true,           // enable iTerm IIP support
+	iipSizeLimit: 20000000      // size limit of a single IIP sequence
+};
 
 const enum RenderConstants {
 	/**
@@ -249,6 +264,10 @@ export class XtermTerminal extends DisposableStore implements IXtermTerminal, II
 		this.raw.loadAddon(this._decorationAddon);
 		this._shellIntegrationAddon = this._instantiationService.createInstance(ShellIntegrationAddon, disableShellIntegrationReporting, this._telemetryService);
 		this.raw.loadAddon(this._shellIntegrationAddon);
+
+		// Load image addon (for displaying sixels && IIP)
+		const imageAddon = new ImageAddon(customSettings);
+		this.raw.loadAddon(imageAddon);
 
 		// Load the suggest addon, this should be loaded regardless of the setting as the sequences
 		// may still come in

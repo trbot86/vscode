@@ -10,6 +10,7 @@ const moduleNames = [
 	'xterm',
 	'xterm-addon-canvas',
 	'xterm-addon-search',
+	'xterm-addon-image',
 	'xterm-addon-unicode11',
 	'xterm-addon-webgl'
 ];
